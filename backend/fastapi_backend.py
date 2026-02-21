@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -7,7 +8,20 @@ from peft import PeftModel
 import os
 import json
 
-app = FastAPI(title="Medical Chatbot API", version="1.0.0")
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """FastAPI lifespan context manager"""
+    # Startup
+    print("Starting up API...")
+    load_models()
+    print("✓ API ready!")
+    yield
+    # Shutdown (if needed)
+    print("Shutting down API...")
+
+app = FastAPI(title="Medical Chatbot API", version="1.0.0", lifespan=lifespan)
 
 # Enable CORS for React frontend
 app.add_middleware(
@@ -41,7 +55,7 @@ def load_models():
     
     # Model paths
     model_id = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
-    lora_model_path = "/home/belysetag/Desktop/chatbot"  # Path where LoRA model is saved
+    lora_model_path = "/home/belysetag/Desktop/chatbot/models" 
     
     # Load tokenizer
     tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
@@ -70,8 +84,34 @@ def load_models():
             base_model,
             lora_model_path,
             is_trainable=False,
+            adapter_name="default"
         )
         print("✓ Fine-tuned model loaded successfully")
+    except TypeError as e:
+        # Handle version mismatch by removing incompatible config keys
+        print(f"⚠ Adapter config mismatch, attempting recovery...")
+        try:
+            import json
+            config_path = f"{lora_model_path}/adapter_config.json"
+            if os.path.exists(config_path):
+                with open(config_path, 'r') as f:
+                    config = json.load(f)
+                # Remove problematic keys if they exist
+                if 'alora_invocation_tokens' in config:
+                    del config['alora_invocation_tokens']
+                with open(config_path, 'w') as f:
+                    json.dump(config, f)
+            # Retry loading
+            fine_tuned_model = PeftModel.from_pretrained(
+                base_model,
+                lora_model_path,
+                is_trainable=False
+            )
+            print("✓ Fine-tuned model loaded successfully (after recovery)")
+        except Exception as retry_error:
+            print(f"⚠ Fine-tuned model not available: {retry_error}")
+            print("  Using base model only")
+            fine_tuned_model = None
     except Exception as e:
         print(f"⚠ Fine-tuned model not found: {e}")
         print("  Using base model only")
@@ -88,23 +128,26 @@ def generate_response(prompt: str, model_type: str = "fine-tuned") -> str:
     # Format prompt with chat template
     formatted_prompt = f"<|im_start|>user\n{prompt}<|im_end|>\n<|im_start|>assistant\n"
     
-    # Tokenize
+    # Tokenize with minimal length
     inputs = tokenizer(
         formatted_prompt,
         return_tensors="pt",
         truncation=True,
-        max_length=512
+        max_length=128
     ).to(device)
     
-    # Generate
+    # Generate - extreme speed optimization
     with torch.no_grad():
         outputs = model.generate(
             **inputs,
-            max_new_tokens=256,
-            temperature=0.7,
-            top_p=0.9,
-            do_sample=True,
+            max_new_tokens=30,
+            temperature=0.1,
+            top_p=0.95,
+            do_sample=False,
             pad_token_id=tokenizer.eos_token_id,
+            use_cache=True,
+            num_beams=1,
+            early_stopping=True,
         )
     
     # Decode
@@ -115,13 +158,6 @@ def generate_response(prompt: str, model_type: str = "fine-tuned") -> str:
         response = response.split("<|im_start|>assistant")[-1].strip()
     
     return response
-
-@app.on_event("startup")
-async def startup_event():
-    """Load models on startup"""
-    print("Starting up API...")
-    load_models()
-    print("✓ API ready!")
 
 @app.get("/")
 async def root():
