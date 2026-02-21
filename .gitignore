@@ -1,0 +1,158 @@
+# ======================
+# Python & Virtual Environments
+# ======================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+ENV/
+env/
+.venv/
+.env
+.env.local
+
+# ======================
+# IDE & Editor
+# ======================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+*~
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# ======================
+# Jupyter Notebook
+# ======================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+*/.ipynb_checkpoints/
+**/.ipynb_checkpoints/
+
+# ======================
+# Model & Data (Large Files)
+# ======================
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+adapter_model.safetensors
+adapter_*.safetensors
+checkpoints/
+models/
+model_cache/
+data/
+datasets/
+weights/
+*.weights
+
+# ======================
+# Logs & Outputs
+# ======================
+logs/
+outputs/
+*.log
+wandb/
+runs/
+experiments/
+
+# ======================
+# Cache & Temporary Files
+# ======================
+*.cache
+*.pkl
+*.pickle
+nccl*/
+tmp/
+temp/
+.cache/
+huggingface/
+
+# ======================
+# Node.js / Frontend
+# ======================
+chatbot-ui/node_modules/
+chatbot-ui/dist/
+chatbot-ui/build/
+chatbot-ui/.env
+chatbot-ui/.env.local
+chatbot-ui/npm-debug.log
+chatbot-ui/yarn-error.log
+
+# ======================
+# Build & Deployment
+# ======================
+*.egg-info/
+dist/
+build/
+*.tar.gz
+.next/
+.cache/
+out/
+
+# ======================
+# Mac & Windows
+# ======================
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+*.lnk
+
+# ======================
+# Colab Specific
+# ======================
+sample_data/
+*.gdrive
+
+# ======================
+# Environment & Config
+# ======================
+.env*
+!.env.example
+config.local.py
+local_settings.py
+
+# ======================
+# Large Visualizations
+# ======================
+*.png
+*.jpg
+*.jpeg
+viz*/
+
+# ======================
+# Miscellaneous
+# ======================
+.git/
+# .gitignore
+*.swp
+.ipynb
+.pytest_cache/
+coverage/
+.coverage
