@@ -1,10 +1,10 @@
-# 🏥 HealthMate — Medical Chatbot with React UI
+# HealthMate
 
 **Fine-tuned TinyLlama-1.1B using LoRA for medical domain Q&A**
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/YOUR_USERNAME/medical-chatbot-lora/blob/main/medical_chatbot_final_(2).ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Niyobelyse/HealthMate/blob/main/medical_chatbot_final_(2).ipynb)
 
-## 📋 Overview & Table of Contents
+## Overview & Table of Contents
 
 - [Overview](#overview)
 - [Quick Start](#quick-start)
@@ -21,7 +21,7 @@
 - [Project Structure](#project-structure)
 - [Troubleshooting](#troubleshooting)
 - [Deployment](#deployment)
-- [FAQ](#faq)
+
 
 ---
 
@@ -29,20 +29,20 @@
 
 HealthMate is a **domain-specific medical chatbot** built by fine-tuning TinyLlama-1.1B using Low-Rank Adaptation (LoRA). It features:
 
-- ✅ **Fine-tuned Model**: LoRA-adapted TinyLlama for medical Q&A (0.44% trainable params)
-- ✅ **React + Tailwind UI**: Modern, responsive web interface
-- ✅ **FastAPI Backend**: RESTful API for model inference
-- ✅ **Model Comparison**: Compare base vs fine-tuned responses side-by-side
-- ✅ **Comprehensive Evaluation**: BLEU, ROUGE, Perplexity metrics
-- ✅ **7 Professional Visualizations**: Dataset analysis, training results, metrics
-- ✅ **Production Ready**: Optimized for CPU inference (~5-10 sec per response)
+-  **Fine-tuned Model**: LoRA-adapted TinyLlama for medical Q&A (0.44% trainable params)
+-  **React + Tailwind UI**: Modern, responsive web interface
+-  **FastAPI Backend**: RESTful API for model inference
+-  **Model Comparison**: Compare base vs fine-tuned responses side-by-side
+-  **Evaluation**: BLEU, ROUGE, Perplexity metrics
+-  **Visualizations**: Dataset analysis, training results, metrics
+-  **Production Ready**: Optimized for CPU inference (~5-10 sec per response)
 
-## 🚀 Quick Start (3 Minutes)
+## Quick Start
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/YOUR_USERNAME/medical-chatbot-lora.git
-cd medical-chatbot-lora
+git clone https://github.com/Niyobelyse/HealthMate.git
+cd HealthMate
 
 # Install backend dependencies
 pip install -r requirements.txt
@@ -66,11 +66,11 @@ npm run dev
 # UI will open at http://localhost:3000
 ```
 
-### 4. Visit http://localhost:3000 and start chatting! 💬
+### 4. Visit http://localhost:3000 and start chatting! 
 
 ---
 
-## 📋 Prerequisites
+##  Prerequisites
 
 - **Python 3.8+** (for backend)
 - **Node.js 16+** (for React frontend)
@@ -90,11 +90,11 @@ git --version
 
 ## Setup Guide
 
-### 1️⃣ Clone Repository
+### Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/medical-chatbot-lora.git
-cd medical-chatbot-lora
+git clone https://github.com/Niyobelyse/HealthMate.git
+cd HealthMate
 ```
 
 ---
@@ -132,8 +132,6 @@ pip install -r requirements.txt
 - PEFT + BitsAndBytes (fine-tuning)
 - NLTK + ROUGE (evaluation metrics)
 - Matplotlib + Seaborn (visualizations)
-
-**Installation time:** ~3-5 minutes
 
 #### Step 3: Verify Installation
 
@@ -189,8 +187,6 @@ npm install
 - Tailwind CSS
 - Vite (build tool)
 - Axios (HTTP client)
-
-**Installation time:** ~1-2 minutes
 
 #### Step 3: Start Development Server
 
@@ -280,10 +276,10 @@ Open **http://localhost:3000** → Start chatting! 💬
 
 | Metric | Base Model | Fine-Tuned | Improvement |
 |--------|-----------|-----------|-------------|
-| BLEU | 0.1248 | 0.1542 | **+23.6%** ✅ |
-| ROUGE-1 | 0.3152 | 0.3847 | **+21.9%** ✅ |
-| ROUGE-L | 0.2894 | 0.3604 | **+24.6%** ✅ |
-| Perplexity | 47.31 | 31.84 | **-32.7%** ✅ |
+| BLEU | 0.1248 | 0.1542 | **+23.6%**  |
+| ROUGE-1 | 0.3152 | 0.3847 | **+21.9%**  |
+| ROUGE-L | 0.2894 | 0.3604 | **+24.6%**  |
+| Perplexity | 47.31 | 31.84 | **-32.7%**  |
 
 ### Qualitative Analysis
 The fine-tuned model:
@@ -652,7 +648,7 @@ export HF_HUB_CACHE=/custom/path  # Change cache location
 
 ---
 
-## ✅ Verification Checklist
+##  Verification Checklist
 
 After setup, verify everything works:
 
