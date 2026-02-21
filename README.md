@@ -2,7 +2,7 @@
 
 **Fine-tuned TinyLlama-1.1B using LoRA for medical domain Q&A**
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Niyobelyse/HealthMate/blob/main/medical_chatbot_final_(2).ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Niyobelyse/HealthMate/blob/main/notebooks/medical_chatbot.ipynb)
 
 ## Overview & Table of Contents
 
@@ -20,7 +20,6 @@
 - [FastAPI Backend](#fastapi-backend)
 - [Project Structure](#project-structure)
 - [Troubleshooting](#troubleshooting)
-- [Deployment](#deployment)
 
 
 ---
@@ -55,6 +54,7 @@ cd ..
 
 ### 2. Run Backend (Terminal 1)
 ```bash
+cd backend
 python fastapi_backend.py
 # API will start at http://localhost:8001
 ```
@@ -70,7 +70,7 @@ npm run dev
 
 ---
 
-##  Prerequisites
+## Prerequisites
 
 - **Python 3.8+** (for backend)
 - **Node.js 16+** (for React frontend)
@@ -143,6 +143,7 @@ python -c "import transformers; print(f'Transformers: {transformers.__version__}
 
 #### Step 4: Start FastAPI Backend
 
+cd backend
 ```bash
 python fastapi_backend.py
 ```
@@ -209,29 +210,28 @@ npm run dev
 
 #### Terminal 1: Backend
 ```bash
-# From project root
+cd backend
 python fastapi_backend.py
 ```
 
 #### Terminal 2: Frontend
 ```bash
-# From project root
 cd chatbot-ui
 npm run dev
 ```
 
 #### Terminal 3: Jupyter (Optional)
 ```bash
-# From project root
-jupyter notebook "medical_chatbot_final_(2).ipynb"
+cd notebooks
+jupyter notebook medical_chatbot.ipynb
 ```
 
 #### Browser
-Open **http://localhost:3000** → Start chatting! 💬
+Open **http://localhost:3000** → Start chatting! 
 
 ---
 
-## 📊 Dataset & Preprocessing
+## Dataset & Preprocessing
 
 | Metric | Value |
 |--------|-------|
@@ -249,7 +249,7 @@ Open **http://localhost:3000** → Start chatting! 💬
 
 ---
 
-## 🤖 Model & Fine-tuning
+## Model & Fine-tuning
 
 ### Architecture
 - **Base Model**: TinyLlama-1.1B-Chat-v1.0
@@ -264,13 +264,13 @@ Open **http://localhost:3000** → Start chatting! 💬
 |-----|--------|-------|-------|--------|------|-----|------|
 | 1 | 8 | 2e-4 | 2 | 1 | 1.9826 | 11.84GB | 52min |
 | 2 | 16 | 1e-4 | 2 | 2 | 1.7134 | 12.31GB | 110min |
-| 3 ⭐ | 32 | 5e-5 | 4 | 3 | **1.6047** | 13.02GB | 173min |
+| 3 | 32 | 5e-5 | 4 | 3 | **1.6047** | 13.02GB | 173min |
 
 **Best Config**: Experiment 3 achieved lowest training loss with higher rank and more epochs.
 
 ---
 
-## 📈 Evaluation Results
+## Evaluation Results
 
 ### Quantitative Metrics (30 test examples)
 
@@ -290,7 +290,7 @@ The fine-tuned model:
 
 ---
 
-## 🎨 Web Interface (React + Tailwind)
+## Web Interface (React + Tailwind)
 
 ### Features
 - **Chat History**: Full conversation tracking
@@ -316,7 +316,7 @@ chatbot-ui/
 
 ---
 
-## ⚙️ FastAPI Backend
+## FastAPI Backend
 
 ### Endpoints
 
@@ -350,36 +350,45 @@ Lists available models.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
-medical-chatbot-lora/
-├── medical_chatbot_final_(2).ipynb    (Jupyter notebook - main)
-├── fastapi_backend.py                 (FastAPI server)
-├── requirements.txt                   (Python dependencies)
+HealthMate/
 ├── README.md                          (this file)
-├── SETUP.md                           (detailed setup guide)
-├── adapter_config.json                (LoRA weights)
-├── adapter_model.safetensors          (LoRA weights)
-├── config.json                        (model config)
-├── tokenizer.json                     (tokenizer)
-├── tokenizer_config.json              (tokenizer config)
+├── requirements.txt                   (Python dependencies)
 │
-└── chatbot-ui/                        (React frontend)
+├── backend/                           (FastAPI server)
+│   └── fastapi_backend.py
+│
+├── models/                            (Fine-tuned model weights)
+│   ├── adapter_config.json
+│   ├── adapter_model.safetensors
+│   ├── tokenizer.json
+│   ├── tokenizer_config.json
+│   └── chat_template.jinja
+│
+├── notebooks/                         (Jupyter notebook)
+│   └── medical_chatbot.ipynb
+│
+└── chatbot-ui/                        (React UI)
+    ├── src/
+    │   ├── App.jsx                   (main React component)
+    │   ├── components/
+    │   │   ├── Header.jsx            (model selector)
+    │   │   ├── ChatWindow.jsx        (message display)
+    │   │   ├── InputForm.jsx         (user input)
+    │   │   ├── Message.jsx           (message bubbles)
+    │   │   └── TypingIndicator.jsx   (loading animation)
+    │   └── index.css                 (styles)
     ├── package.json
     ├── vite.config.js
     ├── tailwind.config.js
-    ├── index.html
-    └── src/
-        ├── App.jsx
-        ├── main.jsx
-        ├── index.css
-        └── components/
+    └── index.html
 ```
 
 ---
 
-## 🎓 Jupyter Notebook Cells
+## Jupyter Notebook Cells
 
 | Cell | Section | Purpose |
 |------|---------|---------|
@@ -395,18 +404,18 @@ medical-chatbot-lora/
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
 ### Modify Model Response
-Edit `fastapi_backend.py` line ~95:
-```python
+Edit `backend/fastapi_backend.py`:
+```pytbackend/hon
 max_new_tokens=50,      # Change response length
 temperature=1.0,        # Change randomness (0=deterministic, 1=random)
 do_sample=False,        # False=greedy (faster), True=sampling
 ```
 
 ### Change Model
-Edit `fastapi_backend.py` line ~47:
+Edit `backend/fastapi_backend.py` line ~47:
 ```python
 model_id = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # Change this
 ```
@@ -424,7 +433,7 @@ colors: {
 
 ---
 
-## 📚 Technology Stack
+## Technology Stack
 
 **Backend:**
 - PyTorch + Transformers
@@ -446,39 +455,19 @@ colors: {
 
 ---
 
-## 🚀 Deployment
-
-### Colab Notebook
-Use the "Open in Colab" badge above to run everything on free GPU.
-
-### Docker (Optional)
-```bash
-docker build -t medical-chatbot .
-docker run -p 8001:8001 -p 3000:3000 medical-chatbot
-```
-
-### Vercel (React UI)
-```bash
-cd chatbot-ui
-npm run build
-# Deploy dist/ folder to Vercel
-```
-
----
-
-## 📄 License
+## License
 
 This project is open-source and available under the MIT License.
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 Built as a fine-tuning project for domain-specific LLMs.
 
 ---
 
-## ❓ FAQ
+## FAQ
 
 **Q: Can I use this for real medical advice?**
 A: No. This is educational only. Always consult qualified healthcare professionals.
@@ -494,7 +483,7 @@ A: Fine-tune with additional datasets from HuggingFace Hub.
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Issue: Port Already in Use
 
@@ -506,7 +495,7 @@ A: Fine-tune with additional datasets from HuggingFace Hub.
 lsof -i :8001
 kill -9 <PID>
 
-# Or use different port - edit fastapi_backend.py:
+# Or use different port - edit backend/fastapi_backend.py:
 # Change: uvicorn.run(app, host="0.0.0.0", port=8001)
 # To:     uvicorn.run(app, host="0.0.0.0", port=8002)
 ```
@@ -531,7 +520,7 @@ pip install -r requirements.txt
 
 **Solution:**
 ```bash
-cd chatbot-ui
+cd frontend/chatbot-ui
 rm -rf node_modules package-lock.json
 npm install
 ```
@@ -550,69 +539,13 @@ npm install
 
 **Performance Tips:**
 - Run on GPU (10x faster)
-- Reduce `max_new_tokens` in `fastapi_backend.py` (line ~95)
+- Reduce `max_new_tokens` in `backend/fastapi_backend.py`
 - Use `do_sample=False` for faster greedy decoding
 - Reduce batch size
 
 ---
 
-## 📦 Deploying to Production
-
-### Docker
-
-Create `Dockerfile`:
-```dockerfile
-FROM python:3.10-slim
-
-WORKDIR /app
-
-# Copy backend
-COPY fastapi_backend.py .
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-# Copy models
-COPY adapter_*.* ./
-COPY config.json tokenizer* ./
-
-# Copy frontend build
-COPY chatbot-ui/dist ./static
-
-# Run both services
-CMD ["sh", "-c", "python fastapi_backend.py & npm run preview"]
-```
-
-Build & run:
-```bash
-docker build -t medical-chatbot .
-docker run -p 8001:8001 -p 3000:3000 medical-chatbot
-```
-
-### Vercel (Frontend Only)
-
-```bash
-cd chatbot-ui
-npm run build
-
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel deploy dist/
-```
-
-Then update API URL in `chatbot-ui/src/App.jsx` to point to your backend.
-
-### AWS/GCP/Azure
-
-1. Deploy backend to cloud VM (FastAPI + Uvicorn)
-2. Deploy frontend to cloud storage (React build)
-3. Update CORS in FastAPI for your domain
-4. Use HTTPS for production
-
----
-
-## 🔐 Environment Variables (Optional)
+## Environment Variables (Optional)
 
 Create `.env`:
 ```
@@ -632,7 +565,7 @@ backend_url = os.getenv("BACKEND_URL", "http://localhost:8001")
 
 ---
 
-## 📊 Model Download
+## Model Download
 
 Models are auto-downloaded on first run:
 
@@ -648,7 +581,7 @@ export HF_HUB_CACHE=/custom/path  # Change cache location
 
 ---
 
-##  Verification Checklist
+## Verification Checklist
 
 After setup, verify everything works:
 
@@ -663,12 +596,13 @@ After setup, verify everything works:
 
 ---
 
-## 🎓 Using the Jupyter Notebook
+## Using the Jupyter Notebook
 
 ### Option 1: Local Jupyter
 ```bash
 jupyter notebook "medical_chatbot_final_(2).ipynb"
-```
+cd notebooks
+jupyter notebook medical_chatbot.ipynb
 
 ### Option 2: Google Colab (Recommended)
 Click the "Open in Colab" badge in README.md
@@ -682,16 +616,15 @@ Click the "Open in Colab" badge in README.md
 
 ---
 
-## 📚 Next Steps
+## Next Steps
 
 1. **Customize**: Edit colors in `chatbot-ui/tailwind.config.js`
 2. **Fine-tune**: Modify hyperparameters in `fastapi_backend.py`
-3. **Deploy**: Follow production deployment steps above
-4. **Improve**: Add more training data for better accuracy
+3. **Improve**: Add more training data for better accuracy
 
 ---
 
-## 🆘 Need Help?
+## Need Help?
 
 1. Check logs: `npm run dev` shows React errors
 2. Check API: Visit `http://localhost:8001/docs` (FastAPI Swagger UI)
@@ -700,7 +633,7 @@ Click the "Open in Colab" badge in README.md
 
 ---
 
-## 📖 Additional Resources
+## Additional Resources
 
 - [FastAPI Documentation](https://fastapi.tiangolo.com/)
 - [React Documentation](https://react.dev/)
@@ -708,6 +641,3 @@ Click the "Open in Colab" badge in README.md
 - [PEFT LoRA Guide](https://huggingface.co/docs/peft)
 - [Tailwind CSS](https://tailwindcss.com/)
 
----
-
-**Good luck! 🚀 You're ready to use HealthMate!**
