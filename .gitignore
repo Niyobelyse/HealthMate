@@ -64,7 +64,7 @@ Thumbs.db
 adapter_model.safetensors
 adapter_*.safetensors
 checkpoints/
-models/
+# models/
 model_cache/
 data/
 datasets/
