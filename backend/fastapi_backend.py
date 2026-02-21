@@ -128,19 +128,19 @@ def generate_response(prompt: str, model_type: str = "fine-tuned") -> str:
     # Format prompt with chat template
     formatted_prompt = f"<|im_start|>user\n{prompt}<|im_end|>\n<|im_start|>assistant\n"
     
-    # Tokenize with minimal length
+    # Tokenize with reduced length for speed
     inputs = tokenizer(
         formatted_prompt,
         return_tensors="pt",
         truncation=True,
-        max_length=128
+        max_length=256
     ).to(device)
     
-    # Generate - extreme speed optimization
+    # Generate with aggressive speed optimization
     with torch.no_grad():
         outputs = model.generate(
             **inputs,
-            max_new_tokens=30,
+            max_new_tokens=60,
             temperature=0.1,
             top_p=0.95,
             do_sample=False,
