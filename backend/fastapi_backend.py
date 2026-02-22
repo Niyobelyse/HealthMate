@@ -26,7 +26,12 @@ app = FastAPI(title="Medical Chatbot API", version="1.0.0", lifespan=lifespan)
 # Enable CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000", 
+        "localhost:3000",
+        "https://health-mate-nz6b.vercel.app",
+        "https://health-mate-nz6b.vercel.app/",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
