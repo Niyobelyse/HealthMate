@@ -30,7 +30,7 @@ function App() {
 
     try {
       // Call FastAPI backend
-      const response = await fetch('http://localhost:8001/query', {
+      const response = await fetch('https://belyseniyo-healthmate-backend.hf.space/query', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ function App() {
       console.error('Error:', error)
       const errorMessage = {
         id: messages.length + 2,
-        text: "I'm having trouble connecting. Make sure the FastAPI server is running on localhost:8001. Error: " + error.message,
+        text: "I'm having trouble connecting to the backend. Please ensure the server is running. Error: " + error.message,
         sender: 'bot',
         timestamp: new Date()
       }
