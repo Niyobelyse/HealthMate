@@ -34,9 +34,14 @@ function App() {
     // Retry logic with exponential backoff
     const maxRetries = 3
     let lastError = null
+    const timeoutMs = 120000 // 2 minutes timeout for CPU inference
 
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
+        // Create abort controller for timeout
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
         // Call FastAPI backend
         const response = await fetch(API_URL, {
           method: 'POST',
@@ -47,8 +52,10 @@ function App() {
             message: userMessage,
             model_type: modelType
           }),
-          timeout: 30000 // 30 second timeout
+          signal: controller.signal
         })
+
+        clearTimeout(timeoutId)
 
         const data = await response.json()
         const botReply = data.response || "I couldn't generate a response. Please try again."
@@ -67,9 +74,9 @@ function App() {
         lastError = error
         console.error(`Attempt ${attempt + 1} failed:`, error)
         
-        // Wait before retrying (exponential backoff: 1s, 2s, 4s)
+        // Wait before retrying (exponential backoff: 2s, 4s, 8s)
         if (attempt < maxRetries - 1) {
-          const waitTime = Math.pow(2, attempt) * 1000
+          const waitTime = Math.pow(2, attempt + 1) * 1000
           await new Promise(resolve => setTimeout(resolve, waitTime))
         }
       }
