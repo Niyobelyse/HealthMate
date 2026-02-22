@@ -3,6 +3,9 @@ import ChatWindow from './components/ChatWindow'
 import InputForm from './components/InputForm'
 import Header from './components/Header'
 
+// Backend API configuration
+const API_URL = 'https://belyseniyo-healthmate-backend.hf.space/query'
+
 function App() {
   const [messages, setMessages] = useState([
     {
@@ -35,7 +38,7 @@ function App() {
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
         // Call FastAPI backend
-        const response = await fetch('https://belyseniyo-healthmate-backend.hf.space/query', {
+        const response = await fetch(API_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
