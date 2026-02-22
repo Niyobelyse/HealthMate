@@ -28,42 +28,60 @@ function App() {
     setMessages(prev => [...prev, newUserMessage])
     setLoading(true)
 
-    try {
-      // Call FastAPI backend
-      const response = await fetch('https://belyseniyo-healthmate-backend.hf.space/query', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: userMessage,
-          model_type: modelType
+    // Retry logic with exponential backoff
+    const maxRetries = 3
+    let lastError = null
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        // Call FastAPI backend
+        const response = await fetch('https://belyseniyo-healthmate-backend.hf.space/query', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message: userMessage,
+            model_type: modelType
+          }),
+          timeout: 30000 // 30 second timeout
         })
-      })
 
-      const data = await response.json()
-      const botReply = data.response || "I couldn't generate a response. Please try again."
+        const data = await response.json()
+        const botReply = data.response || "I couldn't generate a response. Please try again."
 
-      // Add bot message
-      const newBotMessage = {
-        id: messages.length + 2,
-        text: botReply,
-        sender: 'bot',
-        timestamp: new Date()
+        // Add bot message
+        const newBotMessage = {
+          id: messages.length + 2,
+          text: botReply,
+          sender: 'bot',
+          timestamp: new Date()
+        }
+        setMessages(prev => [...prev, newBotMessage])
+        setLoading(false)
+        return // Success - exit retry loop
+      } catch (error) {
+        lastError = error
+        console.error(`Attempt ${attempt + 1} failed:`, error)
+        
+        // Wait before retrying (exponential backoff: 1s, 2s, 4s)
+        if (attempt < maxRetries - 1) {
+          const waitTime = Math.pow(2, attempt) * 1000
+          await new Promise(resolve => setTimeout(resolve, waitTime))
+        }
       }
-      setMessages(prev => [...prev, newBotMessage])
-    } catch (error) {
-      console.error('Error:', error)
-      const errorMessage = {
-        id: messages.length + 2,
-        text: "I'm having trouble connecting to the backend. Please ensure the server is running. Error: " + error.message,
-        sender: 'bot',
-        timestamp: new Date()
-      }
-      setMessages(prev => [...prev, errorMessage])
-    } finally {
-      setLoading(false)
     }
+
+    // All retries failed
+    console.error('All retries exhausted. Last error:', lastError)
+    const errorMessage = {
+      id: messages.length + 2,
+      text: "I'm having trouble connecting to the backend. The server might be starting up. Please try again in a moment.",
+      sender: 'bot',
+      timestamp: new Date()
+    }
+    setMessages(prev => [...prev, errorMessage])
+    setLoading(false)
   }
 
   const clearChat = () => {
