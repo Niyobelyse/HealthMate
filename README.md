@@ -2,8 +2,6 @@
 
 **Fine-tuned TinyLlama-1.1B using LoRA for medical domain Q&A**
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Niyobelyse/HealthMate/blob/main/notebooks/medical_chatbot.ipynb)
-
 ## Overview & Table of Contents
 
 - [Overview](#overview)
