@@ -1,6 +1,7 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
 # Medical Chatbot Dependencies
 # Backend ML & Model
-torch==2.0.1
+torch==2.2.0+cpu
 torchvision==0.15.2
 torchaudio==2.0.2
 transformers==4.36.2
